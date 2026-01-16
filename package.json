@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "build": "echo 'Node.js application - no build step required'"
+    "dev": "node server.js"
   },
   "keywords": ["books", "reader", "library", "pdf"],
   "author": "OpenLeaf",
@@ -21,6 +20,6 @@
     "uuid": "^9.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   }
 }
