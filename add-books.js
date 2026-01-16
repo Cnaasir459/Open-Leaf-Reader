@@ -1,0 +1,270 @@
+const Database = require('better-sqlite3');
+const path = require('path');
+
+const db = new Database('library.db');
+
+// 200 Classic Books Data
+const books = [
+  // Jane Austen
+  { title: "Pride and Prejudice", author: "Jane Austen", description: "A romantic novel following Elizabeth Bennet as she deals with issues of manners, upbringing, morality, education, and marriage." },
+  { title: "Sense and Sensibility", author: "Jane Austen", description: "The story of the Dashwood sisters, Elinor and Marianne, as they come of age." },
+  { title: "Emma", author: "Jane Austen", description: "A novel about the perils of misconstrued romance." },
+  { title: "Persuasion", author: "Jane Austen", description: "The story of Anne Elliot and her reunion with Captain Frederick Wentworth." },
+  { title: "Northanger Abbey", author: "Jane Austen", description: "A coming-of-age satire of Gothic novels." },
+  
+  // Charles Dickens
+  { title: "Oliver Twist", author: "Charles Dickens", description: "The story of an orphan boy living in Victorian London." },
+  { title: "Great Expectations", author: "Charles Dickens", description: "The life story of an orphan named Pip." },
+  { title: "A Tale of Two Cities", author: "Charles Dickens", description: "Set during the French Revolution in London and Paris." },
+  { title: "David Copperfield", author: "Charles Dickens", description: "The biography of a boy growing up in Victorian England." },
+  { title: "Bleak House", author: "Charles Dickens", description: "A satiric attack on the English Court of Chancery." },
+  
+  // Mark Twain
+  { title: "Adventures of Huckleberry Finn", author: "Mark Twain", description: "The adventures of a boy and a runaway slave traveling down the Mississippi River." },
+  { title: "Adventures of Tom Sawyer", author: "Mark Twain", description: "The story of a boy growing up along the Mississippi River." },
+  { title: "The Adventures of Tom Sawyer", author: "Mark Twain", description: "A novel about a young boy growing up in the antebellum South." },
+  { title: "The Prince and the Pauper", author: "Mark Twain", description: "The story of two boys who look identical but are born into different lives." },
+  { title: "Life on the Mississippi", author: "Mark Twain", description: "A memoir of Twain's days as a steamboat pilot." },
+  
+  // Leo Tolstoy
+  { title: "War and Peace", author: "Leo Tolstoy", description: "A chronicle of the French invasion of Russia and the impact on Russian society." },
+  { title: "Anna Karenina", author: "Leo Tolstoy", description: "A tragic story of aristocratic Russian society." },
+  { title: "The Death of Ivan Ilyich", author: "Leo Tolstoy", description: "A novella about a man facing his mortality." },
+  { title: "Resurrection", author: "Leo Tolstoy", description: "A novel about a nobleman serving on a jury and its impact on his life." },
+  { title: "Hadji Murad", author: "Leo Tolstoy", description: "A novella based on the historical figure Hadji Murad." },
+  
+  // Fyodor Dostoevsky
+  { title: "Crime and Punishment", author: "Fyodor Dostoevsky", description: "A psychological drama about a poor ex-student in Saint Petersburg." },
+  { title: "The Brothers Karamazov", author: "Fyodor Dostoevsky", description: "A philosophical novel about the murder of a landowner and his sons." },
+  { title: "Notes from Underground", author: "Fyodor Dostoevsky", description: "A novella considered one of the first existentialist novels." },
+  { title: "The Idiot", author: "Fyodor Dostoevsky", description: "A novel about a 'perfectly beautiful man' in nineteenth-century Russia." },
+  { title: "Demons", author: "Fyodor Dostoevsky", description: "A novel about political violence and revolutionary socialism." },
+  
+  // Ernest Hemingway
+  { title: "The Old Man and the Sea", author: "Ernest Hemingway", description: "The story of an old Cuban fisherman and his struggle with a giant marlin." },
+  { title: "A Farewell to Arms", author: "Ernest Hemingway", description: "A story of love and war during World War I." },
+  { title: "For Whom the Bell Tolls", author: "Ernest Hemingway", description: "The story of an American volunteer in the Spanish Civil War." },
+  { title: "The Sun Also Rises", author: "Ernest Hemingway", description: "A story about a group of American and British expatriates." },
+  { title: "To Have and Have Not", author: "Ernest Hemingway", description: "A novel about a fisherman in Cuba during the Great Depression." },
+  
+  // F. Scott Fitzgerald
+  { title: "The Great Gatsby", author: "F. Scott Fitzgerald", description: "A story of the mysteriously wealthy Jay Gatsby and his love for Daisy Buchanan." },
+  { title: "Tender Is the Night", author: "F. Scott Fitzgerald", description: "A novel about the rise and fall of a psychiatrist and his wife." },
+  { title: "This Side of Paradise", author: "F. Scott Fitzgerald", description: "The story of Amory Blaine's青春期 and early adulthood." },
+  { title: "The Beautiful and Damned", author: "F. Scott Fitzgerald", description: "A novel about the deterioration of a marriage." },
+  { title: "The Last Tycoon", author: "F. Scott Fitzgerald", description: "An unfinished novel about the film industry in Hollywood." },
+  
+  // Virginia Woolf
+  { title: "Mrs. Dalloway", author: "Virginia Woolf", description: "A novel following a woman preparing for a party in post-World War I England." },
+  { title: "To the Lighthouse", author: "Virginia Woolf", description: "A novel about the Ramsay family and their visits to the Isle of Skye." },
+  { title: "Orlando", author: "Virginia Woolf", description: "A novel following a poet who lives for centuries and changes gender." },
+  { title: "A Room of One's Own", author: "Virginia Woolf", description: "An extended essay on women in literature." },
+  { title: "The Waves", author: "Virginia Woolf", description: "A novel using soliloquies of six characters to explore consciousness." },
+  
+  // George Orwell
+  { title: "1984", author: "George Orwell", description: "A dystopian novel about totalitarianism and surveillance." },
+  { title: "Animal Farm", author: "George Orwell", description: "A satirical fairy tale about the corruption of revolution." },
+  { title: "Homage to Catalonia", author: "George Orwell", description: "An account of his experiences during the Spanish Civil War." },
+  { title: "Down and Out in Paris and London", author: "George Orwell", description: "A memoir about poverty in the 1920s." },
+  { title: "The Road to Wigan Pier", author: "George Orwell", description: "A documentary of industrial poverty in Northern England." },
+  
+  // Agatha Christie
+  { title: "And Then There Were None", author: "Agatha Christie", description: "Ten strangers are invited to an island by a mysterious host." },
+  { title: "Murder on the Orient Express", author: "Agatha Christie", description: "Hercule Poirot investigates a murder on a train." },
+  { title: "The Murder of Roger Ackroyd", author: "Agatha Christie", description: "A village murder investigated by Hercule Poirot." },
+  { title: "Death on the Nile", author: "Agatha Christie", description: "Hercule Poirot investigates a murder during a Nile cruise." },
+  { title: "ABC Murders", author: "Agatha Christie", description: "Hercule Poirot receives letters from a serial killer." },
+  
+  // Arthur Conan Doyle
+  { title: "A Study in Scarlet", author: "Arthur Conan Doyle", description: "The first Sherlock Holmes novel, introducing the famous detective." },
+  { title: "The Hound of the Baskervilles", author: "Arthur Conan Doyle", description: "Sherlock Holmes investigates a supernatural hound in Devon." },
+  { title: "The Sign of Four", author: "Arthur Conan Doyle", description: "Sherlock Holmes' second adventure with Dr. Watson." },
+  { title: "The Adventures of Sherlock Holmes", author: "Arthur Conan Doyle", description: "A collection of twelve short stories." },
+  { title: "The Memoirs of Sherlock Holmes", author: "Arthur Conan Doyle", description: "Another collection of Sherlock Holmes stories." },
+  
+  // More Classic Authors
+  { title: "Moby Dick", author: "Herman Melville", description: "The story of Captain Ahab's obsession with a white whale." },
+  { title: "The Scarlet Letter", author: "Nathaniel Hawthorne", description: "A story of adultery and guilt in Puritan New England." },
+  { title: "The Adventures of Tom Sawyer", author: "Mark Twain", description: "The adventures of a mischievous boy in a small town." },
+  { title: "Uncle Tom's Cabin", author: "Harriet Beecher Stowe", description: "A novel that helped fuel the abolitionist cause." },
+  { title: "Frankenstein", author: "Mary Shelley", description: "The story of a scientist who creates a living being." },
+  { title: "Dracula", author: "Bram Stoker", description: "The classic vampire novel." },
+  { title: "The Picture of Dorian Gray", author: "Oscar Wilde", description: "A man remains eternally young while his portrait ages." },
+  { title: "The Strange Case of Dr Jekyll and Mr Hyde", author: "Robert Louis Stevenson", description: "A Gothic novella about a man with a split personality." },
+  { title: "Treasure Island", author: "Robert Louis Stevenson", description: "An adventure story about pirates and treasure." },
+  { title: "Kidnapped", author: "Robert Louis Stevenson", description: "A story of adventure in 18th century Scotland." },
+  { title: "Wuthering Heights", author: "Emily Brontë", description: "A tale of passion and revenge on the Yorkshire moors." },
+  { title: "Jane Eyre", author: "Charlotte Brontë", description: "The story of an orphan girl who becomes a governess." },
+  { title: "Villette", author: "Charlotte Brontë", description: "A novel about a woman teaching in Belgium." },
+  { title: "The Tenant of Wildfell Hall", author: "Anne Brontë", description: "A novel about a woman escaping an abusive marriage." },
+  { title: "Les Misérables", author: "Victor Hugo", description: "The story of Jean Valjean and his pursuit of redemption." },
+  { title: "The Hunchback of Notre-Dame", author: "Victor Hugo", description: "Set in 15th century Paris, focusing on Quasimodo." },
+  { title: "The Count of Monte Cristo", author: "Alexandre Dumas", description: "A story of revenge and justice." },
+  { title: "The Three Musketeers", author: "Alexandre Dumas", description: "The adventures of d'Artagnan and the Musketeers." },
+  { title: "Twenty Years After", author: "Alexandre Dumas", description: "The sequel to The Three Musketeers." },
+  { title: "The Man in the Iron Mask", author: "Alexandre Dumas", description: "Another Musketeers adventure." },
+  { title: "Candide", author: "Voltaire", description: "A satirical novella about Enlightenment philosophy." },
+  { title: "Don Quixote", author: "Miguel de Cervantes", description: "The adventures of a man who thinks he's a knight." },
+  { title: "The Iliad", author: "Homer", description: "An ancient Greek epic about the Trojan War." },
+  { title: "The Odyssey", author: "Homer", description: "The story of Odysseus's journey home after the Trojan War." },
+  { title: "The Republic", author: "Plato", description: "A Socratic dialogue about justice and the ideal state." },
+  { title: "Meditations", author: "Marcus Aurelius", description: "Personal writings of the Roman Emperor." },
+  { title: "The Art of War", author: "Sun Tzu", description: "An ancient Chinese military treatise." },
+  { title: "The Prince", author: "Niccolò Machiavelli", description: "A political treatise on leadership." },
+  { title: "Utopia", author: "Thomas More", description: "A fictional island society." },
+  { title: "The Canterbury Tales", author: "Geoffrey Chaucer", description: "A collection of stories told by pilgrims." },
+  { title: "The Divine Comedy", author: "Dante Alighieri", description: "An epic poem about the afterlife." },
+  { title: "The Bible", author: "Various Authors", description: "Sacred scriptures of Christianity." },
+  { title: "The Quran", author: "Prophet Muhammad", description: "The holy book of Islam." },
+  { title: "Bhagavad Gita", author: "Vyasa", description: "A sacred Hindu text." },
+  { title: "The Tao Te Ching", author: "Lao Tzu", description: "The foundational text of Taoism." },
+  { title: "Meditations", author: "Marcus Aurelius", description: "Personal reflections on Stoic philosophy." },
+  { title: "Beyond Good and Evil", author: "Friedrich Nietzsche", description: "A philosophical work on morality." },
+  { title: "The Stranger", author: "Albert Camus", description: "A novel about existentialism." },
+  { title: "The Myth of Sisyphus", author: "Albert Camus", description: "An essay on the absurd." },
+  { title: "The Catcher in the Rye", author: "J.D. Salinger", description: "A story about teenage angst and alienation." },
+  { title: "To Kill a Mockingbird", author: "Harper Lee", description: "A story of racial injustice in the American South." },
+  { title: "Of Mice and Men", author: "John Steinbeck", description: "The story of two friends during the Great Depression." },
+  { title: "The Grapes of Wrath", author: "John Steinbeck", description: "A story about the Dust Bowl migration." },
+  { title: "East of Eden", author: "John Steinbeck", description: "A multi-generational family saga." },
+  { title: "The Sun Also Rises", author: "Ernest Hemingway", description: "The Lost Generation in post-WWI Europe." },
+  { title: "For Whom the Bell Tolls", author: "Ernest Hemingway", description: "War and love during the Spanish Civil War." },
+  { title: "The Sound and the Fury", author: "William Faulkner", description: "A complex novel about a Southern family." },
+  { title: "As I Lay Dying", author: "William Faulkner", description: "A family's journey to bury their matriarch." },
+  { title: "Invisible Man", author: "Ralph Ellison", description: "A novel about African American identity." },
+  { title: "Beloved", author: "Toni Morrison", description: "A story about the legacy of slavery." },
+  { title: "Their Eyes Were Watching God", author: "Zora Neale Hurston", description: "A woman's journey to self-discovery." },
+  { title: "Gone with the Wind", author: "Margaret Mitchell", description: "The Civil War and Reconstruction in Georgia." },
+  { title: "Rebecca", author: "Daphne du Maurier", description: "A story of mystery and romance." },
+  { title: "Jamaica Inn", author: "Daphne du Maurier", description: "A novel of smuggling and suspense." },
+  { title: "1984", author: "George Orwell", description: "A dystopian vision of the future." },
+  { title: "Brave New World", author: "Aldous Huxley", description: "A dystopian future of technological control." },
+  { title: "Fahrenheit 451", author: "Ray Bradbury", description: "A future where books are burned." },
+  { title: "Dune", author: "Frank Herbert", description: "A science fiction epic about a desert planet." },
+  { title: "Foundation", author: "Isaac Asimov", description: "The collapse and rebirth of a galactic empire." },
+  { title: "Ender's Game", author: "Orson Scott Card", description: "A child prodigy trains for alien invasion." },
+  { title: "Neuromancer", author: "William Gibson", description: "A cyberpunk classic." },
+  { title: "Snow Crash", author: "Neal Stephenson", description: "A cyberpunk adventure." },
+  { title: "The Hitchhiker's Guide to the Galaxy", author: "Douglas Adams", description: "A comedic science fiction series." },
+  { title: "Good Omens", author: "Neil Gaiman & Terry Pratchett", description: "An angel and demon team up to prevent the apocalypse." },
+  { title: "American Gods", author: "Neil Gaiman", description: "Old gods battle new gods in America." },
+  { title: "The Sandman", author: "Neil Gaiman", description: "The Lord of Dreams and his realm." },
+  { title: "The Hobbit", author: "J.R.R. Tolkien", description: "Bilbo Baggins' unexpected journey." },
+  { title: "The Fellowship of the Ring", author: "J.R.R. Tolkien", description: "The first book in The Lord of the Rings." },
+  { title: "The Two Towers", author: "J.R.R. Tolkien", description: "The second book in The Lord of the Rings." },
+  { title: "The Return of the King", author: "J.R.R. Tolkien", description: "The conclusion of The Lord of the Rings." },
+  { title: "The Silmarillion", author: "J.R.R. Tolkien", description: "The mythology of Middle-earth." },
+  { title: "The Chronicles of Narnia", author: "C.S. Lewis", description: "Children enter a magical world through a wardrobe." },
+  { title: "The Magician's Nephew", author: "C.S. Lewis", description: "The origins of Narnia." },
+  { title: "The Lion, the Witch and the Wardrobe", author: "C.S. Lewis", description: "Four children discover Narnia." },
+  { title: "Prince Caspian", author: "C.S. Lewis", description: "The Pevensie children return to Narnia." },
+  { title: "The Voyage of the Dawn Treader", author: "C.S. Lewis", description: "Edmund and Lucy sail to the end of the world." },
+  { title: "The Golden Compass", author: "Philip Pullman", description: "Children journey across parallel worlds." },
+  { title: "The Subtle Knife", author: "Philip Pullman", description: "The second book in His Dark Materials." },
+  { title: "The Amber Spyglass", author: "Philip Pullman", description: "The conclusion of His Dark Materials." },
+  { title: "A Wizard of Earthsea", author: "Ursula K. Le Guin", description: "A young wizard discovers his power." },
+  { title: "The Tombs of Atuan", author: "Ursula K. Le Guin", description: "Tenar becomes priestess to the Nameless Ones." },
+  { title: "The Farthest Shore", author: "Ursula K. Le Guin", description: "A quest to save the world from a dark power." },
+  { title: "A Game of Thrones", author: "George R.R. Martin", description: "The beginning of A Song of Ice and Fire." },
+  { title: "A Clash of Kings", author: "George R.R. Martin", description: "War and intrigue in Westeros." },
+  { title: "A Storm of Swords", author: "George R.R. Martin", description: "The War of the Five Kings intensifies." },
+  { title: "A Feast for Crows", author: "George R.R. Martin", description: "Aftermath of the war." },
+  { title: "A Dance with Dragons", author: "George R.R. Martin", description: "More stories from Westeros." },
+  { title: "The Name of the Rose", author: "Umberto Eco", description: "A medieval murder mystery." },
+  { title: "Foucault's Pendulum", author: "Umberto Eco", description: "A conspiracy thriller." },
+  { title: "The Unbearable Lightness of Being", author: "Milan Kundera", description: "Love and philosophy in Prague." },
+  { title: "The Trial", author: "Franz Kafka", description: "A man is arrested and prosecuted by a remote authority." },
+  { title: "The Metamorphosis", author: "Franz Kafka", description: "A man wakes up transformed into an insect." },
+  { title: "The Castle", author: "Franz Kafka", description: "A man struggles to access a mysterious castle." },
+  { title: "One Hundred Years of Solitude", author: "Gabriel García Márquez", description: "A multi-generational saga of a family." },
+  { title: "Love in the Time of Cholera", author: "Gabriel García Márquez", description: "A story of love and devotion." },
+  { title: "Chronicle of a Death Foretold", author: "Gabriel García Márquez", description: "A murder mystery based on true events." },
+  { title: "The Aleph", author: "Jorge Luis Borges", description: "Short stories exploring infinity." },
+  { title: "Ficciones", author: "Jorge Luis Borges", description: "A collection of metaphysical stories." },
+  { title: "If on a winter's night a traveler", author: "Italo Calvino", description: "A novel about reading." },
+  { title: "Invisible Cities", author: "Italo Calvino", description: "Imaginary cities described by Marco Polo." },
+  { title: "The Master and Margarita", author: "Mikhail Bulgakov", description: "Satan visits Soviet Moscow." },
+  { title: "Heart of a Dog", author: "Mikhail Bulgakov", description: "A scientist transforms a dog into a human." },
+  { title: "The Seagull", author: "Anton Chekhov", description: "A play about love and art." },
+  { title: "Uncle Vanya", author: "Anton Chekhov", description: "A drama of Russian rural life." },
+  { title: "Three Sisters", author: "Anton Chekhov", description: "Three sisters dream of returning to Moscow." },
+  { title: "The Cherry Orchard", author: "Anton Chekhov", description: "A family loses their estate." },
+  { title: "Waiting for Godot", author: "Samuel Beckett", description: "Two men wait for someone named Godot." },
+  { title: "No Exit", author: "Jean-Paul Sartre", description: "Hell is other people." },
+  { title: "Nausea", author: "Jean-Paul Sartre", description: "Existential crisis in a French town." },
+  { title: "The Stranger", author: "Albert Camus", description: "An existential novel about meaning." },
+  { title: "The Plague", author: "Albert Camus", description: "A town faces a deadly epidemic." },
+  { title: "Steppenwolf", author: "Hermann Hesse", description: "A man struggles with his dual nature." },
+  { title: "Siddhartha", author: "Hermann Hesse", description: "A spiritual journey to enlightenment." },
+  { title: "Demian", author: "Hermann Hesse", description: "A young man's search for meaning." },
+  { title: "The Glass Bead Game", author: "Hermann Hesse", description: "A scholar in a futuristic utopia." },
+  { title: "The Sorrows of Young Werther", author: "Johann Wolfgang von Goethe", description: "An epistolary novel about romantic love." },
+  { title: "Faust", author: "Johann Wolfgang von Goethe", description: "A tragic play about a man who makes a pact with the devil." },
+  { title: "Wilhelm Meister's Apprenticeship", author: "Johann Wolfgang von Goethe", description: "A novel about personal development." },
+  { title: "The Magic Mountain", author: "Thomas Mann", description: "A man visits a sanatorium and stays for years." },
+  { title: "Death in Venice", author: "Thomas Mann", description: "An artist's obsession in Venice." },
+  { title: "Buddenbrooks", author: "Thomas Mann", description: "The decline of a merchant family." },
+  { title: "The Confessions of Felix Krull", author: "Thomas Mann", description: "A con man's autobiography." },
+  { title: "The Dispossessed", author: "Ursula K. Le Guin", description: "An anarchist utopia and capitalism." },
+  { title: "The Left Hand of Darkness", author: "Ursula K. Le Guin", description: "An ambassador on a genderless planet." },
+  { title: "Woman on the Edge of Time", author: "Marge Piercy", description: "A woman visits two possible futures." },
+  { title: "The Handmaid's Tale", author: "Margaret Atwood", description: "A dystopian future of religious extremism." },
+  { title: "Oryx and Crake", author: "Margaret Atwood", description: "A post-apocalyptic world." },
+  { title: "The Blind Assassin", author: "Margaret Atwood", description: "A family saga with nested narratives." },
+  { title: "Alias Grace", author: "Margaret Atwood", description: "A historical novel about murder." },
+  { title: "The Red Badge of Courage", author: "Stephen Crane", description: "A young soldier's experience in the Civil War." },
+  { title: "Maggie: A Girl of the Streets", author: "Stephen Crane", description: "A story of urban poverty." },
+  { title: "The Awakening", author: "Kate Chopin", description: "A woman's self-discovery in the 1890s." },
+  { title: "The House of Mirth", author: "Edith Wharton", description: "A woman's struggle in New York society." },
+  { title: "Ethan Frome", author: "Edith Wharton", description: "A tragic love story in rural New England." },
+  { title: "The Age of Innocence", author: "Edith Wharton", description: "New York society in the 1870s." },
+  { title: "The House of the Spirits", author: "Isabel Allende", description: "A family saga spanning generations." },
+  { title: "Of Love and Other Demons", author: "Gabriel García Márquez", description: "A story of love and colonialism." },
+  { title: "The Wind-Up Bird Chronicle", author: "Haruki Murakami", description: "A man's search for his missing wife." },
+  { title: "Norwegian Wood", author: "Haruki Murakami", description: "A nostalgic story of loss." },
+  { title: "Kafka on the Shore", author: "Haruki Murakami", description: "Two people with mysterious connections." },
+  { title: "1Q84", author: "Haruki Murakami", description: "A parallel Tokyo." },
+  { title: "The Old Man and the Sea", author: "Ernest Hemingway", description: "An old fisherman battles a giant marlin." },
+  { title: "For Whom the Bell Tolls", author: "Ernest Hemingway", description: "War and love in Spain." },
+  { title: "A Moveable Feast", author: "Ernest Hemingway", description: "Memoirs of Paris in the 1920s." },
+  { title: "The Sun Also Rises", author: "Ernest Hemingway", description: "The Lost Generation in Europe." },
+  { title: "To Have and Have Not", author: "Ernest Hemingway", description: "Survival in Cuba during the Depression." },
+  { title: "The Green Mile", author: "Stephen King", description: "Death row guards witness a miracle." },
+  { title: "The Shining", author: "Stephen King", description: "A haunted hotel." },
+  { title: "Carrie", author: "Stephen King", description: "A telekinetic girl's revenge." },
+  { title: "IT", author: "Stephen King", description: "A shapeshifting terror in Maine." },
+  { title: "Misery", author: "Stephen King", description: "An author held captive by a fan." },
+  { title: "The Exorcist", author: "William Peter Blatty", description: "A girl's possession and exorcism." },
+  { title: "Rosemary's Baby", author: "Ira Levin", description: "A woman suspects a satanic cult." },
+  { title: "The Amityville Horror", author: "Jay Anson", description: "A haunting in Long Island." },
+  { title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson", description: "A journalist and hacker solve a mystery." },
+  { title: "The Girl Who Played with Fire", author: "Stieg Larsson", description: "A hacker is suspected of murder." },
+  { title: "The Girl Who Kicked the Hornets' Nest", author: "Stieg Larsson", description: "The final book in the trilogy." },
+];
+
+// Insert books into database
+const insert = db.prepare(`
+  INSERT INTO books (title, author, description, file_path, cover_path, uploaded_by)
+  VALUES (?, ?, ?, ?, ?, ?)
+`);
+
+let count = 0;
+for (const book of books) {
+  try {
+    insert.run(
+      book.title,
+      book.author,
+      book.description,
+      '/lib/default-cover.svg',
+      '/lib/default-cover.svg',
+      1  // Assume user ID 1 exists
+    );
+    count++;
+    console.log(`Added: ${book.title} by ${book.author}`);
+  } catch (error) {
+    console.log(`Skipped: ${book.title} - ${error.message}`);
+  }
+}
+
+console.log(`\n✅ Successfully added ${count} books to the database!`);
+console.log(`📚 Total books in database: ${db.prepare('SELECT COUNT(*) FROM books').get()['COUNT(*)']}`);
