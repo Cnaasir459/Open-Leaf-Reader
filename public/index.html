@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenLeaf Reader - Your Digital Library</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-background">
+      <div class="floating-book book-1"></div>
+      <div class="floating-book book-2"></div>
+      <div class="floating-book book-3"></div>
+    </div>
+    
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 48 48" fill="none">
+            <path d="M8 4C6.89543 4 6 4.89543 6 6V42C6 43.1046 6.89543 44 8 44H40C41.1046 44 42 43.1046 42 42V6C42 4.89543 41.1046 4 40 4H8Z" fill="#3B82F6"/>
+            <path d="M12 10H36M12 16H36M12 22H28M12 28H32M12 34H24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M30 24L38 32M38 24L30 32" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span class="logo-text">OpenLeaf</span>
+        </div>
+        <p class="tagline">Your personal digital library</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="register">Create Account</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form active">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">
+          <span>Sign In</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+        <p class="form-footer">Don't have an account? <a href="#" class="switch-tab" data-tab="register">Sign up</a></p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="auth-form">
+        <div class="form-group">
+          <label for="register-username">Username</label>
+          <input type="text" id="register-username" placeholder="Choose a username" required minlength="3">
+        </div>
+        <div class="form-group">
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" placeholder="At least 6 characters" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">
+          <span>Create Account</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+        <p class="form-footer">Already have an account? <a href="#" class="switch-tab" data-tab="login">Sign in</a></p>
+      </form>
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <span>Upload & Organize</span>
+      </div>
+      <div class="feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+        </svg>
+        <span>Real Reading Experience</span>
+      </div>
+      <div class="feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+        </svg>
+        <span>Track Progress</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="/js/auth.js"></script>
+</body>
+</html>
